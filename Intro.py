@@ -125,7 +125,7 @@ projects = [
     ("Reconocimiento de Objeto en Imagen", "https://yolov5-18-09-25-9.streamlit.app/"),
     ("Detección de gestos", "https://tm-18-09-25-deteccion-de-gestos-en-aplicacion.streamlit.app/"),
     ("Reconocimiento de escritura manual", "https://jmmkjajakhandw-6e65smhjjbwbbpcnzktx59.streamlit.app/"),
-    ("bocetos", "https://bocetosdrawrecog-hedij5ffxtqnqolquyfuyy.streamlit.app/"),
+    ("Bocetos", "https://bocetosdrawrecog-hedij5ffxtqnqolquyfuyy.streamlit.app/"),
     ("Lector de sensor", "https://recepmqtt161025-e7jafwey8ayhjzcazgd7yn.streamlit.app/"),
     ("MQTT Control", "https://sendcmqttbotones-elwaife6rhrsewvqkrenaq.streamlit.app/"),
     ("Control por Voz + MQTT", "https://ctrlvoice16-10-25voz--iot-y-sistemas-ciberfisicos.streamlit.app/")
