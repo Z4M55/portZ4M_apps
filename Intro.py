@@ -12,7 +12,7 @@ import os
 # ===========================
 # CONFIG
 # ===========================
-st.set_page_config(page_title="⚡ Portafolio · Dioses & Tech", page_icon="🛡️", layout="wide")
+st.set_page_config(page_title="⚡ Portafolio · Samuel Serna Giraldo", page_icon="🛡️", layout="wide")
 
 # Carpeta donde colocas las imágenes .jpg (puede ser "." o "images")
 IMAGE_FOLDER = "images"  # cambia si las imágenes están otra carpeta
@@ -103,8 +103,8 @@ st.markdown(
 st.markdown(
     """
     <div class="header">
-      <div class="title">⚡ Portafolio — Dioses & Tecnología</div>
-      <div class="subtitle">Proyectos multimodales — visualización rápida con estética oscura, dorado y azul</div>
+      <div class="title">⚡ Portafolio — Interfaces Multimodales </div>
+      <div class="subtitle">Proyectos multimodales — Samuel Serna Giraldo</div>
     </div>
     """,
     unsafe_allow_html=True,
@@ -220,8 +220,8 @@ st.markdown("---")
 st.markdown(
     """
     <div style="display:flex; justify-content:space-between; align-items:center;">
-      <div style="color: #98AFC7;">Tema: Dioses & Tecnología · tonos oscuros, dorado y azul</div>
-      <div style="color: #C9A84E; font-weight:700;">Portafolio generado automáticamente</div>
+      <div style="color: #98AFC7;">Tema: Interfaces · Samuel Serna Giralfo</div>
+      <div style="color: #C9A84E; font-weight:700;">Portafolio Interfaces Multimodales</div>
     </div>
     """,
     unsafe_allow_html=True,
