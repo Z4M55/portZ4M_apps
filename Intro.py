@@ -1,109 +1,118 @@
-# app.py
-# Portafolio · Tema: Dioses + Tecnología (tonos oscuros, dorado y azul)
-# - Coloca imágenes .jpg en ./images/ con los nombres de superhéroes indicados.
-# - Si faltan imágenes, se usan placeholders automáticos.
-# - El orden de asignación de imágenes a proyectos es aleatorio cada vez que se ejecuta.
+# -*- coding: utf-8 -*-
+"""
+Portafolio — tema oscuro / dorado / azul (dioses + tecnología)
+Asigna aleatoriamente imágenes .jpg (nombres basados en superhéroes)
+a cada proyecto. NO muestra el nombre del archivo de la imagen.
+"""
 
 import streamlit as st
 import random
 import os
-import urllib.parse
-from datetime import datetime
 
-# ------------------------
-# Configuración página
-# ------------------------
-st.set_page_config(page_title="⌬ Portafolio — Dioses & Tech ⌬", page_icon="⚡", layout="wide")
-st.markdown("""
-<style>
-/* Theme: dark + dorado + azul (dioses + tecnología) */
-:root{
-  --bg: #071022;        /* very dark navy */
-  --panel: #0f2236;     /* dark blue panel */
-  --gold: #C9A84A;      /* soft gold */
-  --accent: #2F7BD8;    /* tech blue */
-  --muted: #9fb3c8;
-  --card-bg: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06));
-}
-html, body, .stApp {
-  background: radial-gradient(900px 500px at 10% 0%, #07142a 0%, var(--bg) 70%);
-  color: #e9f1fb;
-  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-}
-h1,h2,h3 {
-  color: var(--gold) !important;
-  text-align: left;
-  letter-spacing: 1px;
-  font-weight: 700;
-}
-.header-box{
-  border-left: 6px solid var(--gold);
-  padding: 18px;
-  border-radius: 10px;
-  background: linear-gradient(90deg, rgba(47,123,216,0.03), rgba(201,168,74,0.02));
-  margin-bottom: 12px;
-}
-.card {
-  background: var(--card-bg);
-  border: 1px solid rgba(47,123,216,0.12);
-  border-radius: 14px;
-  padding: 12px;
-  transition: transform .18s ease, box-shadow .18s ease;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.5);
-}
-.card:hover {
-  transform: translateY(-6px) scale(1.01);
-  box-shadow: 0 12px 32px rgba(47,123,216,0.12);
-}
-.card img {
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-  border-radius: 10px;
-  border: 2px solid rgba(201,168,74,0.12);
-}
-.card h4 {
-  margin: 10px 0 6px 0;
-  color: #eaf6ff;
-}
-.card p { color: var(--muted); margin: 0; font-size: 14px; }
-.card a {
-  display:inline-block;
-  margin-top:8px;
-  color: var(--gold);
-  text-decoration:none;
-  font-weight:700;
-}
-.card a:hover { color: #fff; text-decoration:underline; }
-.row {
-  margin-bottom: 18px;
-}
-.meta {
-  font-size:12px; color: var(--muted);
-}
-.grid {
-  gap: 18px;
-}
-.footer {
-  color: var(--muted);
-  margin-top: 18px;
-}
-.badge {
-  display:inline-block;
-  padding:6px 10px;
-  border-radius:999px;
-  background: rgba(201,168,74,0.12);
-  border:1px solid rgba(201,168,74,0.16);
-  color: var(--gold);
-  font-weight:700;
-  font-size:12px;
-}
-</style>
-""", unsafe_allow_html=True)
+# ===========================
+# CONFIG
+# ===========================
+st.set_page_config(page_title="⚡ Portafolio · Dioses & Tech", page_icon="🛡️", layout="wide")
 
-# ------------------------
-# Datos del portafolio (proyectos y links)
-# ------------------------
+# Carpeta donde colocas las imágenes .jpg (puede ser "." o "images")
+IMAGE_FOLDER = "images"  # cambia si las imágenes están otra carpeta
+# Asegúrate de tener archivos: BLACKPANTERR.jpg, LOKI.jpg, ..., thor.jpg (según la lista que diste)
+
+# ===========================
+# ESTILOS (oscuro, dorado, azul)
+# ===========================
+st.markdown(
+    """
+    <style>
+    :root{
+      --bg: #070812;         /* muy oscuro */
+      --panel: #0f1724;      /* panel oscuro */
+      --gold: #C9A84E;       /* dorado suave */
+      --blue: #0E3B66;       /* azul profundo */
+      --muted: #98AFC7;      /* gris azulado */
+      --accent: linear-gradient(90deg, #0E3B66, #C9A84E);
+    }
+    html, body, .stApp {
+      background: radial-gradient(900px 600px at 10% 0%, #071022 0%, var(--bg) 60%);
+      color: var(--muted) !important;
+      font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    .header {
+      border: 2px solid rgba(201,168,78,0.12);
+      background: linear-gradient(180deg, rgba(14,59,102,0.06), rgba(201,168,78,0.02));
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 6px 30px rgba(2,6,23,0.6);
+      margin-bottom: 18px;
+    }
+    .title {
+      color: #E6EEF8;
+      font-size: 34px;
+      font-weight: 800;
+      letter-spacing: 0.6px;
+    }
+    .subtitle {
+      color: var(--gold);
+      margin-top: 6px;
+      font-size: 14px;
+    }
+    .card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border: 1px solid rgba(201,168,78,0.06);
+      border-radius: 14px;
+      padding: 12px;
+      transition: transform .18s ease, box-shadow .18s ease;
+      box-shadow: 0 6px 18px rgba(2,6,23,0.6);
+    }
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 30px rgba(2,6,23,0.8);
+    }
+    .proj-title {
+      color: #F6F9FC;
+      font-weight: 700;
+      margin: 8px 0 6px 0;
+      font-size: 16px;
+    }
+    .proj-link {
+      color: var(--gold);
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .proj-link:hover { text-decoration: underline; }
+    .thumb {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid rgba(201,168,78,0.06);
+    }
+    .grid { gap: 20px; }
+    @media (max-width: 900px) {
+      .thumb { height: 160px; }
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
+# ===========================
+# Cabecera
+# ===========================
+st.markdown(
+    """
+    <div class="header">
+      <div class="title">⚡ Portafolio — Dioses & Tecnología</div>
+      <div class="subtitle">Proyectos multimodales — visualización rápida con estética oscura, dorado y azul</div>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
+
+# ===========================
+# Datos (el usuario los proveyó)
+# ===========================
 projects = [
     ("Intro", "https://intro2-2bbeuqnqeswgfoyswmhcpr.streamlit.app/"),
     ("Texto - Voz", "https://imm1porfe-6ccneorn74eegcazqt3vev.streamlit.app/"),
@@ -119,120 +128,101 @@ projects = [
     ("bocetos", "https://bocetosdrawrecog-hedij5ffxtqnqolquyfuyy.streamlit.app/"),
     ("Lector de sensor", "https://recepmqtt161025-e7jafwey8ayhjzcazgd7yn.streamlit.app/"),
     ("MQTT Control", "https://sendcmqttbotones-elwaife6rhrsewvqkrenaq.streamlit.app/"),
-    ("Control por Voz + MQTT", "https://ctrlvoice16-10-25voz--iot-y-sistemas-ciberfisicos.streamlit.app/"),
+    ("Control por Voz + MQTT", "https://ctrlvoice16-10-25voz--iot-y-sistemas-ciberfisicos.streamlit.app/")
 ]
 
-# Lista de nombres de imagenes proporcionados por el usuario
+# ===========================
+# Lista de nombres de imagenes (proporcionados)
+# Se agregarán .jpg y se asignarán aleatoriamente
+# ===========================
 hero_names = [
-    "BLACKPANTERR", "LOKI", "SAMURAI", "SPIDERMAAN", "CAPIAMERICA",
-    "CAPAMERICA", "IRONMANN", "GRUU", "HULKK", "DRSTRANGER",
-    "DEADPOOLL", "LOBEZNOO", "FLASHH", "blackpanter", "thor"
+    "BLACKPANTERR","LOKI","SAMURAI","SPIDERMAAN","CAPIAMERICA","CAPAMERICA","IRONMANN",
+    "GRUU","HULKK","DRSTRANGER","DEADPOOLL","LOBEZNOO","FLASHH","blackpanter","thor"
 ]
 
-# Path local esperado para imágenes
-images_folder = "images"  # crea esta carpeta y sube ahí los .jpg con los nombres indicados
+# Construir rutas de imagen (sin mostrar el nombre en la UI).
+# Intentaremos usar IMAGE_FOLDER/<NAME>.jpg; si no existe, intentaremos NAME.jpg en la raíz.
+available_images = []
+for name in hero_names:
+    p1 = os.path.join(IMAGE_FOLDER, f"{name}.jpg")
+    p2 = f"{name}.jpg"
+    if os.path.exists(p1):
+        available_images.append(p1)
+    elif os.path.exists(p2):
+        available_images.append(p2)
+# Si no se encuentran archivos locales, el código seguirá, pero mostrará un placeholder (color).
+# Para evitar error, si la carpeta está vacía, crear una lista con None placeholders.
+if len(available_images) == 0:
+    # No hay imágenes locales detectadas — usaremos placeholders generados (data URLs o colores).
+    # Aquí creamos placeholders simples con gradientes CSS (no se muestran nombres)
+    use_placeholders = True
+else:
+    use_placeholders = False
 
-# Mezclar los nombres de imagen para asignación aleatoria
-random.seed()  # semilla por tiempo
-shuffled_heroes = hero_names.copy()
-random.shuffle(shuffled_heroes)
+# Asegurar que haya al menos tantas imágenes como proyectos: si fewer, permitimos repetición.
+# Mezclar aleatoriamente la lista de imágenes para asignación
+if not use_placeholders:
+    random.shuffle(available_images)
+    # Si hay menos imágenes que proyectos, repetir hasta cubrir
+    while len(available_images) < len(projects):
+        available_images = available_images + available_images
+    assigned_images = available_images[: len(projects)]
+else:
+    # placeholders: asignar None for each project
+    assigned_images = [None] * len(projects)
 
-# Construir lista de image URLs (si existe local -> usar file:, si no -> placeholder)
-image_urls = []
-for hero in shuffled_heroes:
-    filename = f"{hero}.jpg"
-    local_path = os.path.join(images_folder, filename)
-    if os.path.exists(local_path):
-        # usar ruta relativa (funciona si despliegas el repo con archivos estáticos)
-        # Streamlit en many deploys no sirve file://, pero al poner path relativo Streamlit lo servirá si está en repo.
-        url = local_path
-    else:
-        # placeholder con texto (codificado)
-        text = urllib.parse.quote_plus(f"{hero}")
-        url = f"https://via.placeholder.com/600x400/0f2236/ffffff?text={text}"
-    image_urls.append((hero, url))
-
-# Asignar aleatoriamente imágenes a proyectos (orden aleatorio ya obtenido)
-project_cards = []
-for (title, link), (hero, url) in zip(projects, image_urls):
-    project_cards.append({
-        "title": title,
-        "link": link,
-        "hero": hero,
-        "image": url
-    })
-
-# ------------------------
-# Header UI
-# ------------------------
-st.markdown(f"""
-<div class="header-box">
-  <h1>⌬ Portafolio · Dioses & Tecnología</h1>
-  <div style="display:flex; gap:12px; align-items:center; margin-top:6px;">
-    <div class="badge">TONOS: Oscuro · Dorado · Azul</div>
-    <div style="margin-left:8px;" class="meta">Estética: mitos, dioses, y sistemas — proyectos multimodales · {len(project_cards)} items</div>
-  </div>
-</div>
-""", unsafe_allow_html=True)
-
-# ------------------------
-# Mostrar tarjetas en grid 5 columnas
-# ------------------------
+# ===========================
+# Renderizar tarjetas en grid (3 filas x 5 columnas)
+# ===========================
 cols_per_row = 5
-rows = (len(project_cards) + cols_per_row - 1) // cols_per_row
+rows = (len(projects) + cols_per_row - 1) // cols_per_row
 idx = 0
+
 for r in range(rows):
     cols = st.columns(cols_per_row, gap="large")
     for c in cols:
-        if idx >= len(project_cards):
+        if idx >= len(projects):
             break
-        card = project_cards[idx]
-        title = card["title"]
-        link = card["link"]
-        hero = card["hero"]
-        img = card["image"]
-
-        # Si la url es local path, mostrar con st.image; de lo contrario usar markdown img.
-        if img.startswith(images_folder):
-            # streamlit image
-            with c:
-                st.markdown(
-                    f"""
-                    <div class="card">
-                        <img src="{img}" alt="{hero}">
-                        <h4>{title}</h4>
-                        <p class="meta">Imagen: <strong>{hero}.jpg</strong></p>
-                        <a href="{link}" target="_blank">Abrir proyecto ↗</a>
-                    </div>
-                    """,
-                    unsafe_allow_html=True
-                )
-        else:
-            # placeholder remote
-            with c:
-                st.markdown(
-                    f"""
-                    <div class="card">
-                        <img src="{img}" alt="{hero}">
-                        <h4>{title}</h4>
-                        <p class="meta">Imagen placeholder: <strong>{hero}.jpg</strong></p>
-                        <a href="{link}" target="_blank">Abrir proyecto ↗</a>
-                    </div>
-                    """,
-                    unsafe_allow_html=True
-                )
+        title, link = projects[idx]
+        image_path = assigned_images[idx]  # path or None
+        with c:
+            # tarjeta HTML + streamlit elements
+            if image_path:
+                # usar st.image para que no muestre nombre de archivo
+                st.markdown('<div class="card">', unsafe_allow_html=True)
+                st.image(image_path, use_column_width=True, clamp=True)
+                st.markdown(f'<div style="padding-top:8px;"><div class="proj-title">{title}</div>'
+                            f'<a class="proj-link" href="{link}" target="_blank">Abrir proyecto</a></div>',
+                            unsafe_allow_html=True)
+                st.markdown('</div>', unsafe_allow_html=True)
+            else:
+                # Placeholder: caja con gradiente dorado/azul y título + enlace
+                placeholder_html = f"""
+                <div class="card" style="display:flex; flex-direction:column; align-items:center; justify-content:flex-start;">
+                  <div style="width:100%; height:220px; border-radius:8px;
+                              background: linear-gradient(135deg, rgba(14,59,102,0.6), rgba(201,168,78,0.45));
+                              display:flex; align-items:center; justify-content:center;">
+                    <div style="color: rgba(255,255,255,0.12); font-size:46px; font-weight:800;">⚡</div>
+                  </div>
+                  <div style="padding-top:10px;">
+                    <div class="proj-title">{title}</div>
+                    <a class="proj-link" href="{link}" target="_blank">Abrir proyecto</a>
+                  </div>
+                </div>
+                """
+                st.markdown(placeholder_html, unsafe_allow_html=True)
         idx += 1
 
-# ------------------------
-# Mapeo actual (información al final)
-# ------------------------
+# ===========================
+# Footer / créditos
+# ===========================
 st.markdown("---")
-st.subheader("📜 Mapeo de imágenes asignadas (aleatorio)")
-mapping_md = ""
-for i, card in enumerate(project_cards, start=1):
-    mapping_md += f"{i}. **{card['title']}** — imagen: **{card['hero']}.jpg** — link: {card['link']}  \n"
-
-st.markdown(mapping_md)
-
-st.markdown("---")
-st.markdown(f"<div class='meta'>Generado: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} · Diseñado con tonos dorado y azul · Tema: Dioses & Tecnología</div>", unsafe_allow_html=True)
+st.markdown(
+    """
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <div style="color: #98AFC7;">Tema: Dioses & Tecnología · tonos oscuros, dorado y azul</div>
+      <div style="color: #C9A84E; font-weight:700;">Portafolio generado automáticamente</div>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
